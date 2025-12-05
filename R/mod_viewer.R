@@ -104,14 +104,10 @@ viewer_server <- function(id) {
         pix <- im_raw >= input$threshold
 
         shiny::renderPlot({
-          #plot(im_channeled)
-          #if (input$threshold > 0){
-          #  imager::highlight(pix)
-          #}
           if (input$overlay) {
-            imager::colorise(im_channeled, pix, "red",alpha=.5) |> plot()
+            imager::colorise(im_channeled, pix, "red",alpha=.5) |> plot(axes = FALSE)
           } else {
-            plot(im_channeled)
+            plot(im_channeled, axes = FALSE)
           }
 
         })
