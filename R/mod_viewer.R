@@ -13,7 +13,8 @@ viewer_ui <- function(id) {
        shiny::hr(),
        shiny::uiOutput(ns("bins_slider")),
        shiny::uiOutput(ns("threshold_slider")),
-      shiny::uiOutput(ns("ymax_input"))
+       shiny::uiOutput(ns("ymax_input")),
+       shiny::uiOutput(ns("text_size"))
       ),
       shiny::mainPanel(
         shiny::uiOutput(ns("image_display")),
@@ -88,6 +89,14 @@ viewer_server <- function(id) {
                             )
       })
 
+
+      output$text_size <- shiny::renderUI({
+        shiny::numericInput(ns("text_size"),
+                            "Histogram text size",
+                            value = 16
+        )
+      })
+
       output$image_display <- renderUI({
         shiny::req(input$image, input$channel)
         im_raw <- im()
@@ -115,8 +124,9 @@ viewer_server <- function(id) {
 
       output$image_histogram <- shiny::renderUI({
         shiny::req(input$image)
+
         shiny::renderPlot({
-          image_hist(im(), input$bins, input$threshold, input$ymax)
+          image_hist(im(), input$bins, input$threshold, input$ymax, input$text_size)
         })
       })
     }
