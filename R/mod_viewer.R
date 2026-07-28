@@ -14,7 +14,8 @@ viewer_ui <- function(id) {
        shiny::uiOutput(ns("bins_slider")),
        shiny::uiOutput(ns("threshold_slider")),
        shiny::uiOutput(ns("ymax_input")),
-       shiny::uiOutput(ns("text_size"))
+       shiny::uiOutput(ns("text_size")),
+       shiny::downloadLink((ns("download_button")))
       ),
       shiny::mainPanel(
         shiny::uiOutput(ns("image_display")),
@@ -96,6 +97,13 @@ viewer_server <- function(id) {
                             value = 16
         )
       })
+
+      output$download_button <- shiny::downloadHandler(
+        filename = function() { "plot.png" },
+        content = function(file) {
+          device <- function(..., width, height) grDevices::png(..., width = 600, height = 200, res = 300, units = "mm")
+          ggplot2::ggsave(file, plot = image_hist(im(), input$bins, input$threshold, input$ymax, input$text_size), device = device)
+        })
 
       output$image_display <- renderUI({
         shiny::req(input$image, input$channel)
